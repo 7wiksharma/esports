@@ -1,16 +1,23 @@
 package com.indoreesports.esports.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.Date;
+
 @Entity
 public class Tournament {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String description;
+    private double prizePool;
+
+    @Temporal(TemporalType.DATE)
+    private Date date;
+
+    private int availableSlots;
 
     // Getters and Setters
     public Long getId() {
@@ -35,5 +42,29 @@ public class Tournament {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getPrizePool() {
+        return prizePool;
+    }
+
+    public void setPrizePool(double prizePool) {
+        this.prizePool = prizePool;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public int getAvailableSlots() {
+        return availableSlots;
+    }
+
+    public void setAvailableSlots(int availableSlots) {
+        this.availableSlots = availableSlots;
     }
 }

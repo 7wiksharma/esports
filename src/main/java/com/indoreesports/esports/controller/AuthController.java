@@ -2,10 +2,12 @@ package com.indoreesports.esports.controller;
 
 import com.indoreesports.esports.entity.User;
 import com.indoreesports.esports.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +32,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest, HttpSession session) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
 
-        return ResponseEntity.ok("Login successful!");
+        session.setAttribute("user", authentication.getPrincipal()); // Store user in session
+        return ResponseEntity.ok("Login successful! Session created.");
     }
 
     @PostMapping("/register")
@@ -52,10 +55,16 @@ public class AuthController {
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole("ROLE_USER"); // Default role for new users
+        user.setRole("ROLE_USER");
 
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully!");
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logoutUser(HttpSession session) {
+        session.invalidate(); // Invalidate session on logout
+        return ResponseEntity.ok("Logged out successfully!");
     }
 
     // DTOs for cleaner request handling

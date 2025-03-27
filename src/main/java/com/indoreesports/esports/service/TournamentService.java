@@ -28,6 +28,9 @@ public class TournamentService {
         Tournament tournament = tournamentRepository.findById(id).orElse(null);
         if (tournament != null) {
             tournament.setName(tournamentDetails.getName());
+            tournament.setPrizePool(tournamentDetails.getPrizePool());
+            tournament.setDate(tournamentDetails.getDate());
+            tournament.setAvailableSlots(tournamentDetails.getAvailableSlots());
             tournament.setDescription(tournamentDetails.getDescription());
             return tournamentRepository.save(tournament);
         }
